@@ -1,10 +1,12 @@
 import React, { ReactElement } from 'react';
 import { AccountLayout } from '@/components/layouts';
+import AccountLayoutMui from '@/components/layouts/mui/AccountLayout';
 import { useTranslation } from 'react-i18next';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
 import router from 'next/router';
+import env from 'lib/env'
 
 const Custom404 = () => {
   const { t } = useTranslation('common');
@@ -43,7 +45,11 @@ const Custom404 = () => {
 export default Custom404;
 
 Custom404.getLayout = function getLayout(page: ReactElement) {
-  return <AccountLayout>{page}</AccountLayout>;
+  if (env.version === 'mui') {
+    return <AccountLayoutMui>{page}</AccountLayoutMui>;
+  } else {
+    return <AccountLayout>{page}</AccountLayout>;
+  }
 };
 
 export async function getStaticProps({ locale }: GetServerSidePropsContext) {

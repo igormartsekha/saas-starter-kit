@@ -129,3 +129,10 @@ export const getCurrentUser = async (
 
   return session.user;
 };
+
+export interface ClientUserData {
+  id: string;
+  name: string;
+  email: string;
+  image: string;
+}

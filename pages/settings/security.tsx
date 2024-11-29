@@ -6,6 +6,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import env from '@/lib/env';
 import { UpdatePassword } from '@/components/account';
+import UpdatePasswordMui from '@/components/account/mui/UpdatePassword';
 import ManageSessions from '@/components/account/ManageSessions';
 
 type SecurityProps = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -13,7 +14,7 @@ type SecurityProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 const Security = ({ sessionStrategy }: SecurityProps) => {
   return (
     <div className="flex gap-10 flex-col">
-      <UpdatePassword />
+      {env.version === 'mui' ? <UpdatePasswordMui /> : <UpdatePassword />}
       {sessionStrategy === 'database' && <ManageSessions />}
     </div>
   );

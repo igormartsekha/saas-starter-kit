@@ -8,6 +8,13 @@ import { useTranslation } from 'next-i18next';
 
 import { ThemesProps, applyTheme } from '@/lib/theme';
 
+
+// import DarkModeIcon from '@mui/icons-material/DarkModeRounded';
+// import LightModeIcon from '@mui/icons-material/LightModeRounded';
+// import DesktopWindows from '@mui/icons-material/DesktopWindows';
+
+import { DarkMode, LightMode, DesktopWindows } from '@mui/icons-material';
+
 const useTheme = () => {
   const [theme, setTheme] = useState<string | null>(null);
   const { t } = useTranslation('common');
@@ -20,17 +27,21 @@ const useTheme = () => {
     {
       id: 'system',
       name: t('system'),
-      icon: ComputerDesktopIcon,
+      // icon: ComputerDesktopIcon,
+      icon: DesktopWindows,
     },
     {
       id: 'dark',
       name: t('dark'),
-      icon: MoonIcon,
+      // icon: MoonIcon,
+      icon: DarkMode,
     },
     {
       id: 'light',
       name: t('light'),
-      icon: SunIcon,
+      // icon: SunIcon,
+      // icon: SunIcon,
+      icon: LightMode,
     },
   ];
 

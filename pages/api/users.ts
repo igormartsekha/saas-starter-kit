@@ -6,6 +6,7 @@ import env from '@/lib/env';
 import { getUser, updateUser } from 'models/user';
 import { isEmailAllowed } from '@/lib/email/utils';
 import { updateAccountSchema, validateWithSchema } from '@/lib/zod';
+import { getUserBySession, ClientUserData } from 'models/user';
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,6 +14,9 @@ export default async function handler(
 ) {
   try {
     switch (req.method) {
+      case 'GET':
+        await handleGET(req, res);
+        break;
       case 'PUT':
         await handlePUT(req, res);
         break;
@@ -29,6 +33,28 @@ export default async function handler(
     res.status(status).json({ error: { message } });
   }
 }
+
+// Get user
+const handleGET = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getSession(req, res);
+
+  if (!session) {
+      return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const user = await getUserBySession(session);
+
+  recordMetric('team.fetched');
+
+ 
+  const userData: ClientUserData = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    image: user.image
+  };
+  res.status(200).json({ data: userData });
+};
 
 const handlePUT = async (req: NextApiRequest, res: NextApiResponse) => {
   const data = validateWithSchema(updateAccountSchema, req.body);

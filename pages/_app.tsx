@@ -13,7 +13,8 @@ import { useEffect } from 'react';
 import env from '@/lib/env';
 import { Theme, applyTheme } from '@/lib/theme';
 import { Themer } from '@boxyhq/react-ui/shared';
-import { AccountLayout } from '@/components/layouts';
+import AccountLayout from '@/components/layouts/AccountLayout';
+import AccountLayoutMui from '@/components/layouts/mui/AccountLayout'
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const { session, ...props } = pageProps;
@@ -34,17 +35,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }, []);
 
   const getLayout =
-    Component.getLayout || ((page) => <AccountLayout>{page}</AccountLayout>);
-
-  return (
-    <>
-      <Head>
-        <title>{app.name}</title>
-        <link rel="icon" href="https://boxyhq.com/img/favicon.ico" />
-      </Head>
-      <SessionProvider session={session}>
-        <Toaster toastOptions={{ duration: 4000 }} />
-        <Themer
+    Component.getLayout || ((page) => {
+      if (env.version === 'mui') {
+        return <AccountLayoutMui>{page}</AccountLayoutMui>;
+      } else {
+        return (<Themer
           overrideTheme={{
             '--primary-color': colors.blue['500'],
             '--primary-hover': colors.blue['600'],
@@ -60,9 +55,23 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             '--primary-color-950': colors.blue['950'],
           }}
         >
-          {getLayout(<Component {...props} />)}
-        </Themer>
-      </SessionProvider>
+          <AccountLayout>
+            {page}
+          </AccountLayout>
+        </Themer>)
+      }
+    });
+
+  return (
+    <>
+      <Head>
+        <title>{app.name}</title>
+        <link rel="icon" href="https://boxyhq.com/img/favicon.ico" />
+      </Head>
+      <SessionProvider session={session}>
+        <Toaster toastOptions={{ duration: 4000 }} />
+        {getLayout(<Component {...props} />)}
+    </SessionProvider >
     </>
   );
 }

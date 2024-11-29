@@ -8,6 +8,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getSession } from '@/lib/session';
 import { getUserBySession } from 'models/user';
 import { UpdateAccount } from '@/components/account';
+import UpdateAccountMui from '@/components/account/mui/UpdateAccount';
 import env from '@/lib/env';
 
 type AccountProps = InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -16,7 +17,11 @@ const Account: NextPageWithLayout<AccountProps> = ({
   user,
   allowEmailChange,
 }) => {
-  return <UpdateAccount user={user} allowEmailChange={allowEmailChange} />;
+  if(env.version === 'mui') {
+    return <UpdateAccountMui user={user} allowEmailChange={allowEmailChange} />;
+  } else { 
+    return <UpdateAccount user={user} allowEmailChange={allowEmailChange} />;
+  }
 };
 
 export const getServerSideProps = async (
